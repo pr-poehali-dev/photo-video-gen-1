@@ -33,11 +33,26 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
     }
 
     setTimeout(() => {
-      localStorage.setItem("userEmail", loginEmail);
-      localStorage.setItem("isAuthenticated", "true");
-      setIsLoading(false);
-      onOpenChange(false);
-      alert("Успешный вход! 🎉");
+      const savedEmail = localStorage.getItem("userEmail");
+      const savedPassword = localStorage.getItem("userPassword");
+      
+      if (savedEmail && savedPassword) {
+        if (loginEmail === savedEmail && loginPassword === savedPassword) {
+          localStorage.setItem("isAuthenticated", "true");
+          setIsLoading(false);
+          onOpenChange(false);
+          const userName = localStorage.getItem("userName") || "Пользователь";
+          alert(`Добро пожаловать, ${userName}! 🎉`);
+          setLoginEmail("");
+          setLoginPassword("");
+        } else {
+          setError("Неверный email или пароль");
+          setIsLoading(false);
+        }
+      } else {
+        setError("Аккаунт не найден. Зарегистрируйтесь сначала!");
+        setIsLoading(false);
+      }
     }, 500);
   };
 
@@ -61,10 +76,14 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
     setTimeout(() => {
       localStorage.setItem("userName", registerName);
       localStorage.setItem("userEmail", registerEmail);
+      localStorage.setItem("userPassword", registerPassword);
       localStorage.setItem("isAuthenticated", "true");
       setIsLoading(false);
       onOpenChange(false);
       alert(`Добро пожаловать, ${registerName}! 🚀`);
+      setRegisterName("");
+      setRegisterEmail("");
+      setRegisterPassword("");
     }, 500);
   };
 
