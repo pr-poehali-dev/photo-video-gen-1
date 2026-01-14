@@ -50,8 +50,15 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
           setIsLoading(false);
         }
       } else {
-        setError("Аккаунт не найден. Зарегистрируйтесь сначала!");
+        localStorage.setItem("userEmail", loginEmail);
+        localStorage.setItem("userPassword", loginPassword);
+        localStorage.setItem("userName", "Пользователь");
+        localStorage.setItem("isAuthenticated", "true");
         setIsLoading(false);
+        onOpenChange(false);
+        alert("🎉 Добро пожаловать! Аккаунт создан и вы вошли в систему!");
+        setLoginEmail("");
+        setLoginPassword("");
       }
     }, 500);
   };
@@ -103,6 +110,9 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
           </TabsList>
           
           <TabsContent value="login" className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded text-sm mb-4">
+              👋 Если у вас ещё нет аккаунта — перейдите на вкладку "Регистрация"
+            </div>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-sm">
                 {error}
@@ -164,6 +174,9 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
           </TabsContent>
           
           <TabsContent value="register" className="space-y-4">
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded text-sm mb-4">
+              ✨ После регистрации вы сразу войдёте в систему!
+            </div>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-sm">
                 {error}
