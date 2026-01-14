@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
+import AuthDialog from "@/components/AuthDialog";
 
 const Index = () => {
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<"login" | "register">("login");
   const features = [
     {
       icon: "Wand2",
@@ -73,10 +77,23 @@ const Index = () => {
             <a href="#examples" className="text-sm font-medium hover:text-primary transition-colors">
               Примеры
             </a>
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+            <Button 
+              variant="outline" 
+              className="border-primary text-primary hover:bg-primary hover:text-white"
+              onClick={() => {
+                setAuthTab("login");
+                setAuthDialogOpen(true);
+              }}
+            >
               Войти
             </Button>
-            <Button className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90">
+            <Button 
+              className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90"
+              onClick={() => {
+                setAuthTab("register");
+                setAuthDialogOpen(true);
+              }}
+            >
               Начать бесплатно
             </Button>
           </nav>
@@ -104,7 +121,14 @@ const Index = () => {
             Встроенные шаблоны, гибкая настройка, мгновенный результат.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 text-lg px-8">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 text-lg px-8"
+              onClick={() => {
+                setAuthTab("register");
+                setAuthDialogOpen(true);
+              }}
+            >
               <Icon name="Sparkles" className="mr-2" size={20} />
               Попробовать бесплатно
             </Button>
@@ -204,7 +228,15 @@ const Index = () => {
               Присоединяйтесь к тысячам компаний, которые уже используют GenAI Studio
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" variant="secondary" className="text-lg px-8 bg-white text-primary hover:bg-gray-100">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="text-lg px-8 bg-white text-primary hover:bg-gray-100"
+                onClick={() => {
+                  setAuthTab("register");
+                  setAuthDialogOpen(true);
+                }}
+              >
                 <Icon name="Rocket" className="mr-2" size={20} />
                 Начать сейчас
               </Button>
@@ -260,6 +292,12 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <AuthDialog 
+        open={authDialogOpen} 
+        onOpenChange={setAuthDialogOpen}
+        defaultTab={authTab}
+      />
     </div>
   );
 };
