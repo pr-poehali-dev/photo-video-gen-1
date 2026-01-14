@@ -14,9 +14,11 @@ interface AuthDialogProps {
 
 const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -24,17 +26,19 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
     setIsLoading(true);
     setError("");
     
-    setTimeout(() => {
+    if (!loginEmail || !loginPassword) {
+      setError("Пожалуйста, заполните все поля");
       setIsLoading(false);
-      if (email && password) {
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("isAuthenticated", "true");
-        onOpenChange(false);
-        window.location.reload();
-      } else {
-        setError("Пожалуйста, заполните все поля");
-      }
-    }, 800);
+      return;
+    }
+
+    setTimeout(() => {
+      localStorage.setItem("userEmail", loginEmail);
+      localStorage.setItem("isAuthenticated", "true");
+      setIsLoading(false);
+      onOpenChange(false);
+      alert("Успешный вход! 🎉");
+    }, 500);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -42,18 +46,26 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
     setIsLoading(true);
     setError("");
     
-    setTimeout(() => {
+    if (!registerName || !registerEmail || !registerPassword) {
+      setError("Пожалуйста, заполните все поля");
       setIsLoading(false);
-      if (email && password && name) {
-        localStorage.setItem("userName", name);
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("isAuthenticated", "true");
-        onOpenChange(false);
-        window.location.reload();
-      } else {
-        setError("Пожалуйста, заполните все поля");
-      }
-    }, 800);
+      return;
+    }
+
+    if (registerPassword.length < 6) {
+      setError("Пароль должен быть минимум 6 символов");
+      setIsLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      localStorage.setItem("userName", registerName);
+      localStorage.setItem("userEmail", registerEmail);
+      localStorage.setItem("isAuthenticated", "true");
+      setIsLoading(false);
+      onOpenChange(false);
+      alert(`Добро пожаловать, ${registerName}! 🚀`);
+    }, 500);
   };
 
   return (
@@ -84,8 +96,8 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
                   id="email"
                   type="email"
                   placeholder="ваш@email.ru"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
                   required
                 />
               </div>
@@ -95,8 +107,8 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
                   required
                 />
               </div>
@@ -145,8 +157,8 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
                   id="name"
                   type="text"
                   placeholder="Иван Иванов"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
                   required
                 />
               </div>
@@ -156,8 +168,8 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
                   id="email-register"
                   type="email"
                   placeholder="ваш@email.ru"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
                   required
                 />
               </div>
@@ -167,9 +179,10 @@ const AuthDialog = ({ open, onOpenChange, defaultTab = "login" }: AuthDialogProp
                   id="password-register"
                   type="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
                   required
+                  minLength={6}
                 />
               </div>
               <Button 
